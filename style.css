@@ -1,9 +1,10 @@
 html,
 body {
-  padding: 0;
-  margin: 0 auto;
   height: 100%;
   width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 #map {
@@ -28,28 +29,173 @@ h6 {
   font-size: 1.2em;
 }
 
-.intro-popup .leaflet-popup-tip-container {
-  width: 0;
-  height: 0;
+[hidden] {
+  display: none !important;
 }
 
 .pointer {
   cursor: pointer;
 }
 
+/* Loading spinner */
+.loader,
+.loader::before,
+.loader::after {
+  background: #000;
+  animation: load1 1s infinite ease-in-out;
+  width: 1em;
+  height: 4em;
+}
+
+.loader {
+  position: absolute;
+  left: 50vw;
+  top: 45vh;
+  color: #000;
+  font-size: 11px;
+  text-indent: -9999em;
+  transform: translateZ(0);
+  animation-delay: -0.16s;
+}
+
+.loader::before,
+.loader::after {
+  position: absolute;
+  top: 0;
+  content: '';
+}
+
+.loader::before {
+  left: -1.5em;
+  animation-delay: -0.32s;
+}
+
+.loader::after {
+  left: 1.5em;
+}
+
+@keyframes load1 {
+  0%, 80%, 100% { box-shadow: 0 0; height: 4em; }
+  40% { box-shadow: 0 -2em; height: 5em; }
+}
+
+#load-error {
+  position: absolute;
+  top: 40vh;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 80vw;
+  padding: 16px 20px;
+  border-left: 4px solid #c0392b;
+  background: #fdecea;
+  color: #611a15;
+}
+
+/* Non-fatal problems, e.g. a GeoJSON file that could not be loaded */
+#notices {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1100;
+  max-width: min(420px, 90vw);
+}
+
+.notice {
+  position: relative;
+  margin-top: 6px;
+  padding: 8px 30px 8px 10px;
+  border-left: 4px solid #e67e22;
+  border-radius: 4px;
+  background: #fff8e6;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+}
+
+.notice button {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  border: 0;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Controls and legends */
 .leaflet-control-custom {
   padding: 6px 8px;
   background: white;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
   color: #333;
   border-radius: 5px;
 }
 
-.leaflet-control-geocoder {
-  z-index: 9999;
+.leaflet-top.leaflet-left {
+  padding-top: 10px;
 }
 
-form {
+.map-title {
+  margin-top: 0 !important;
+  margin-bottom: 10px;
+  max-width: 450px;
+}
+
+.div-center {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.div-center .map-title {
+  pointer-events: auto;
+}
+
+.legend-map-title {
+  margin-bottom: 6px;
+}
+
+.ladder {
+  position: relative;
+  width: 180px;
+  margin-top: 0 !important;
+  overflow: hidden;
+}
+
+.ladder > h6 {
+  padding-right: 18px;
+}
+
+.ladder > h6.minimize ~ * {
+  display: none !important;
+}
+
+span.legend-icon {
+  color: #bbb;
+  margin-right: 5px;
+}
+
+span.legend-arrow {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  color: #999;
+  transition: transform 0.2s;
+}
+
+.ladder > h6:not(.minimize) .legend-arrow {
+  transform: rotate(180deg);
+}
+
+.ladder.leaflet-control-layers > h6 {
+  padding: 0 18px 4px 0;
+}
+
+.polygons-legend form {
   margin-top: 2px;
 }
 
@@ -66,146 +212,6 @@ form {
   margin-right: 8px;
 }
 
-.leaflet-popup-content {
-  min-width: 150px;
-}
-
-.leaflet-popup-content img {
-  width: 100%;
-  margin: 5px 0 5px 0;
-}
-
-.geojson-point-marker {
-  radius: 3;
-}
-
-.loader,
-.loader:before,
-.loader:after {
-  background: #000;
-  -webkit-animation: load1 1s infinite ease-in-out;
-  animation: load1 1s infinite ease-in-out;
-  width: 1em;
-  height: 4em;
-}
-.loader:before,
-.loader:after {
-  position: absolute;
-  top: 0;
-  content: '';
-}
-.loader:before {
-  left: -1.5em;
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
-}
-.loader {
-  color: #000;
-  text-indent: -9999em;
-  position: absolute;
-  left: 50vw;
-  top: 45vh;
-  font-size: 11px;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
-}
-.loader:after {
-  left: 1.5em;
-}
-@-webkit-keyframes load1 {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 0;
-    height: 4em;
-  }
-  40% {
-    box-shadow: 0 -2em;
-    height: 5em;
-  }
-}
-@keyframes load1 {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 0;
-    height: 4em;
-  }
-  40% {
-    box-shadow: 0 -2em;
-    height: 5em;
-  }
-}
-
-/* Technically there are two map titles, on the left and on the right,
- * at all times. On a big screen, map title in the right column is not
- * displayed. On a mobile device, title in the right column is shown with 0
- * opacity, so that search, locate, and zoom buttons do not overlay the title,
- * creating an effect as if the title is located on top, and not the left column.
- */
-.leaflet-right .map-title { display: none; }
-
-@media only screen and (max-width: 760px) {
-  .leaflet-right .map-title {
-    display: block;
-    opacity: 0;
-  }
-
-  .leaflet-left .map-title {
-    width: 98%;
-  }
-}
-
-#mobile-intro-popup {
-  position: absolute;
-  bottom: 5vh;
-  left: 10vw;
-  width: 70vw;
-  z-index: 1000;
-  background: white;
-  padding: 1vh 5vw;
-  opacity: 0.9;
-  border: 5px #ddd solid;
-  border-radius: 5px;
-  font-family: "Helvetica Neue", Arial;
-}
-
-#mobile-intro-popup p {
-  margin: 10px 0 10px 0;
-  max-height: 80vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-#mobile-intro-popup-close {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 30px;
-  background: #bbb;
-  color: white;
-  font-size: 1.4em;
-  text-align: center;
-  border-radius: 5px;
-  opacity: 0.8;
-}
-
-#polygonSelect {
-  width: 100%;
-}
-
-.polygon-label {
-  position: absolute;
-  left: -15px;
-  color: #444;
-  font-weight: bold;
-  opacity: 0.9;
-  pointer-events: none !important;
-}
-
 .color-line {
   display: inline-block;
   vertical-align: middle;
@@ -218,72 +224,129 @@ form {
   vertical-align: middle;
 }
 
-.map-title {
-  margin-top: 0 !important;
-  margin-bottom: 10px;
-  max-width: 450px;
+/* Markers */
+.pin-marker {
+  background: none;
+  border: 0;
 }
 
-.leaflet-top.leaflet-left {
-  padding-top: 10px;
-}
-
-/* Map Table */
-div.dataTables_scrollBody {
-  border: 0 !important;
-}
-
-div.dataTables_scrollHead {
-  color: #eee !important;
-}
-
-.dataTable * {
-  font-family: "Helvetica Neue", Arial;
-  border: 0 !important;
-}
-
-div.dataTables_scrollHead table.display {
-  background-color: #444;
-  color: #eee;
-}
-
-select {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.div-center {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding-top: 10px;
-}
-
-span.legend-arrow {
-  color: rgb(238, 238, 238);
+.pin-marker svg {
   position: absolute;
-  right: 8px;
-  top: 5px;
+  inset: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
-span.legend-icon {
-  color: #bbb;
-  margin-right: 5px;
+.pin-marker i {
+  position: absolute;
+  top: 9px;
+  left: 0;
+  width: 32px;
+  text-align: center;
+  font-size: 14px;
 }
 
-.ladder {
-  width: 180px;
-  margin-top: 0 !important;
-  overflow: hidden;
+.polygon-label span {
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  color: #444;
+  font-weight: bold;
+  text-shadow: 0 0 3px white, 0 0 3px white;
+  opacity: 0.9;
 }
 
-.ladder h6.minimize ~ div,
-.ladder h6.minimize ~ form {
-  display: none !important;
+/* Popups */
+.leaflet-popup-content {
+  min-width: 150px;
 }
 
-.ladder form, .ladder div {
-  display: block;
+.leaflet-popup-content img {
+  width: 100%;
+  margin: 5px 0;
+}
+
+.intro-popup .leaflet-popup-tip-container {
+  display: none;
+}
+
+#mobile-intro-popup {
+  position: absolute;
+  bottom: 5vh;
+  left: 10vw;
+  width: 70vw;
+  z-index: 1000;
+  padding: 1vh 5vw;
+  background: white;
+  opacity: 0.95;
+  border: 5px #ddd solid;
+  border-radius: 5px;
+}
+
+#mobile-intro-popup p {
+  margin: 10px 0;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#mobile-intro-popup-close {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 30px;
+  border: 0;
+  border-radius: 5px;
+  background: #bbb;
+  color: white;
+  font-size: 1.4em;
+  cursor: pointer;
+}
+
+/* Table of visible points */
+#maptable {
+  overflow-y: auto;
+  --table-header-bg: #444;
+  --table-header-fg: #eee;
+}
+
+#maptable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#maptable thead th {
+  position: sticky;
+  top: 0;
+  padding: 0;
+  background: var(--table-header-bg);
+  text-align: left;
+}
+
+#maptable thead button {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  background: none;
+  color: var(--table-header-fg);
+  font: inherit;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}
+
+#maptable th[aria-sort="ascending"] button::after { content: ' ▲'; }
+#maptable th[aria-sort="descending"] button::after { content: ' ▼'; }
+
+#maptable td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+#maptable tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+#maptable td.empty {
+  color: #888;
+  font-style: italic;
 }
