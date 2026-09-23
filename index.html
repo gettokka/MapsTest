@@ -1,86 +1,67 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, user-scalable=yes">
-
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Scripts only from this site and the pinned CDN; no inline scripts, so injected HTML cannot run code. -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+    font-src https://cdn.jsdelivr.net;
+    img-src * data: blob:;
+    connect-src 'self' https:;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'none'">
   <title>Loading the map...</title>
 
-  <!-- jQuery-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- All third-party files are pinned to exact versions and checked with Subresource Integrity -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+        integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+        integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder@4.0.0/dist/Control.Geocoder.css"
+        integrity="sha384-dtZhMVplthx1XPTPFEKMM5M6e369Paz7gy0QTqvuQKB42lq4FIPsrqe125Ho6bfO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.90.1/dist/L.Control.Locate.min.css"
+        integrity="sha384-71M4mrilXHJO54OLYzaJ+wRg/RuwOXcMW4OaLe/G0WamhbdNCNpCn6SvpVZ6Lf5N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"
+        integrity="sha384-qrALq7+6jBOZIQsNnT6xGkMDru64qD6uTlDra39xrt2SoXl4pO3FX6Roz/RpR/BS" crossorigin="anonymous">
+  <!-- Keeps Font Awesome 4/5 icon names from existing sheets working (e.g. fa-coffee) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/v4-shims.min.css"
+        integrity="sha384-BOBgwI2GEcZ4l/UA/+WOVnLChe2S4c7UhUCtdmX1m0v7Wdyk0S/tDoJOBci2ywvl" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
 
-  <!-- Leaflet (CSS and JS) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet-providers@4.0.0/leaflet-providers.js"
+          integrity="sha384-j/D9Z1z1cvGAAX1T4HFz2ZnR8JE+Y44HqctbKnnHIG7hTzuorOkfI4N0VTlnjYch" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+          integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet.markercluster.layersupport@2.0.1/dist/leaflet.markercluster.layersupport.js"
+          integrity="sha384-SYYZuKTphPlPPfzH9mDrAJ/l9RG2gRfyJiOaMVL1n1/BWFoGfbzSbHHUvydYStj/" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet-control-geocoder@4.0.0/dist/Control.Geocoder.js"
+          integrity="sha384-GwOxBPYQUJoAtZlP9zcDGxDFHdgRasiwmwj4JQoxhWpOBaETX1aOU/qm8fsP4Hf5" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.90.1/dist/L.Control.Locate.umd.js"
+          integrity="sha384-sQYgcsH6n55cgawB5EoDSvvH8nwayixkT46tPmn4qoNpX61K67Qpz3XDJ+KqSy1E" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.7.0/papaparse.min.js"
+          integrity="sha384-Cac1u6+UwTX6dLDygwZYoxzTmqBikf22tn1qbNy+EVRSvn+FIh9oC/VRmAaL4Ih9" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.min.js"
+          integrity="sha384-uUMu9JDY09vBzRf9SPcK2VgUj+W/70J6Soc+Dded5P474ElQ63iv9j5N3DE7Kp3N" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/google-palette@1.1.1/palette.js"
+          integrity="sha384-cdv6kLsgX340768cH2KIExDwq2unPdQvZHG/ZsQVuo5ulxPrbtRIVRZmGeb1NSYO" crossorigin="anonymous"></script>
 
-  <!-- leaflet-providers -->
-  <script src="scripts/leaflet-providers/leaflet-providers.js"></script>
-
-  <!-- Tabletop -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.js"></script>
-
-  <!-- Font Awesome -->
-  <script src="https://use.fontawesome.com/77cd9dd4f5.js"></script>
-
-  <!-- Leaflet.awesome-markers -->
-  <link rel="stylesheet" type="text/css" href="scripts/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
-  <script type="text/javascript" src="scripts/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
-
-  <!-- Markercluster -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.4/dist/MarkerCluster.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.4/dist/MarkerCluster.Default.css">
-  <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.0.4/dist/leaflet.markercluster.js"></script>
-
-  <!-- Mapzen Search
-  <link rel="stylesheet" href="scripts/leaflet-geocoder/leaflet-geocoder-mapzen.css">
-  <script src="scripts/leaflet-geocoder/leaflet-geocoder-mapzen.js"></script>
-   -->
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
-  <!-- Locate Control -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-locatecontrol/0.60.0/L.Control.Locate.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-locatecontrol/0.60.0/L.Control.Locate.min.js"></script>
-
-  <!-- jQuery-CSV -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-
-  <!-- Custom style sheet -->
-  <link rel="stylesheet" type="text/css" href="style.css">
-
-  <!-- Layer Support for Marker Cluster -->
-  <script src="https://unpkg.com/leaflet.markercluster.layersupport@1.0.3/dist/leaflet.markercluster.layersupport.js"></script>
-
-  <!-- DataTables -->
-  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
-
-  <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+  <script defer src="google-doc-url.js"></script>
+  <script type="module" src="scripts/main.js"></script>
 </head>
 
 <body>
-
-  <div class="loader">Loading...</div>
+  <div class="loader" role="status">Loading...</div>
+  <div id="load-error" role="alert" hidden></div>
   <div id="map"></div>
-  <table id="maptable" class="display"></table>
-
-  <script type="text/javascript">
-    var map = L.map('map', {
-      attributionControl: false,
-      zoomControl: false,
-      scrollWheelZoom: false
-    }).setView([41.76,-72.69], 11); // default center is overridden by Google Sheet options and points
-  </script>
-
-  <script type="text/javascript" src="google-doc-url.js"></script>
-  <script type="text/javascript" src="scripts/constants.js"></script>
-  <script type="text/javascript" src="scripts/palette.js"></script>
-  <script type="text/javascript" src="scripts/polylabel.js"></script>
-  <script type="text/javascript" src="scripts/procsv.js"></script>
-  <script type="text/javascript" src="scripts/map.js"></script>
-
+  <div id="maptable" hidden></div>
+  <div id="notices" aria-live="polite"></div>
 </body>
 </html>
